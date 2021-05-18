@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS Z} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%c}{bright,yellow}: %msg%n%throwable
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+        <Logger name="com.acme.labs" level="DEBUG" />
+        <Logger name="nashorn-example.js" level="DEBUG" />
+    </Loggers>
+</Configuration>
