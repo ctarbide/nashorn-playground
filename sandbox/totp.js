@@ -5,12 +5,15 @@
     (ansi-color-apply-on-region compilation-filter-start (point)))
   (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
 
-(setq compile-command "mvn compile && ./nashorn-playground.sh -strict nashorn-example.js -- arg1 arg2")
-
-(setq compile-command "./nashorn-playground.sh -strict nashorn-example.js -- --algo=sha1 file1 --step- 30 -d=6 -k- JBSWY3DPEHPK3PXP -b -xyz file2")
+(setq compile-command "./totp.sh --algo=sha1 --step=30 -d=6 -k- JBSWY3DPEHPK3PXP -b -xyz")
 
 (local-set-key (kbd "C-c C-c") 'recompile)
 */
+
+// reference: https://datatracker.ietf.org/doc/html/rfc6238
+// reference: http://jsfiddle.net/russau/ch8PK
+
+// TODO: base32 encoding/decoding
 
 var array_type = (function(global){
     "use strict";
@@ -222,48 +225,33 @@ function bytes_from_base32(val) {
 }
 
 var __FILE__basename = __FILE__.replace(/^.*\//, '');
-var LOG = LogManager['getLogger(java.lang.String)'](__FILE__basename);
+var LOG = LogManager['getLogger(String)'](__FILE__basename);
 
 // Security.addProvider(new BouncyCastleProvider());
 Security.insertProviderAt(new BouncyCastleProvider(), 1);
 
-/* play time
+/* tests
  */
 
-System.out.println(Example.getValue());
-print(Example.getValue());
+function totp_hmac_data(t) {
+    return ByteBuffer.allocate(8).putLong(t).array();
+}
 
-LOG.trace("testing: {}", 'trace message');
-LOG.debug("testing: {}", 'debug message');
-LOG.info("testing: {}", 'info message');
-LOG.warn("testing: {}", 'warn message');
-
-Array.prototype.slice.call(arguments).forEach(function(v, idx){
-    LOG.debug("arg[{}]: {}", idx|0, v);
-});
-
-// https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-(function(){
-    function list() {
-        return Array.prototype.slice.call(arguments);
+function totp(digest, key, step, digits, t0, secs){
+    "use strict";
+    digits |= 0;
+    if (digits < 6 || digits > 9) {
+        return null;
     }
-
-    var list1 = list(1, 2, 3); // [1, 2, 3]
-    LOG.debug('list1: {}', Java.to(list1));
-}());
-
-// https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-(function(){
-    var unboundSlice = Array.prototype.slice;
-    var slice = Function.prototype.call.bind(unboundSlice);
-
-    function list() {
-        return slice(arguments);
+    if (secs < t0) {
+        return null;
     }
-
-    var list1 = list(1, 2, 3); // [1, 2, 3]
-    LOG.debug('list1: {}', Java.to(list1));
-}());
+    var h = hmac(digest, key, totp_hmac_data(((secs - t0) / step)));
+    var hbb = ByteBuffer['wrap(byte[])'](h);
+    var index = last(h) & 0xf;
+    var value = hbb.getInt(index) & 0x7fffffff;
+    return ('00000000' + value).slice(-digits);
+}
 
 var short_option_name = {
     'k': 'key',
@@ -271,6 +259,7 @@ var short_option_name = {
     't': 'time',
     'x': 'xray',
     'y': 'yankee',
+    'z': 'zulu',
 };
 
 function parse_args(args) {
@@ -309,5 +298,17 @@ function parse_args(args) {
         'sha256': SHA256Digest,
         'sha512': SHA512Digest,
     };
-    LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    if ((typeof args.options.key) !== 'string') {
+        throw 'error: missing key'
+    }
+    // LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    var token = totp(
+        args.options.algo ? algos[args.options.algo] : SHA1Digest,
+        bytes_from_base32(args.options.key),
+        args.options.step ? parseInt(args.options.step) : 30 /* step */,
+        args.options.digits ? parseInt(args.options.digits) : 8 /* digits */,
+        args.options.t0 ? parseInt(args.options.t0) : 0 /* t0 */,
+        args.options.time ? parseInt(args.options.time) : Date.now() / 1000
+    );
+    print(token);
 }(parse_args(arguments)));
