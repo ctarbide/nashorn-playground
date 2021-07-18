@@ -304,10 +304,11 @@ function parse_args(args) {
 
 (function(args){
     "use strict";
-    var algos = {
-        'sha1': SHA1Digest,
-        'sha256': SHA256Digest,
-        'sha512': SHA512Digest,
-    };
-    LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    if (args.options.showargs) {
+        LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    } else if (args.argv.length || Object.keys(args.options).length) {
+        print("some arguments provided, now try with --showargs");
+    } else {
+        print("no arguments provided, try with --showargs");
+    }
 }(parse_args(arguments)));

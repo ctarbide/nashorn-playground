@@ -13,8 +13,6 @@
 // reference: https://datatracker.ietf.org/doc/html/rfc6238
 // reference: http://jsfiddle.net/russau/ch8PK
 
-// TODO: base32 encoding/decoding
-
 var array_type = (function(global){
     "use strict";
 
@@ -63,8 +61,6 @@ var array_type = (function(global){
     import_('java.lang.Object[]', 'ObjectArray');
     import_('long[]', 'LongArray');
     import_('short[]', 'ShortArray');
-
-    import_('com.acme.labs.Example');
 
     return function array_type(b) {
         return array_types[b.getClass().getName()];
@@ -225,7 +221,7 @@ function bytes_from_base32(val) {
 }
 
 var __FILE__basename = __FILE__.replace(/^.*\//, '');
-var LOG = LogManager['getLogger(String)'](__FILE__basename);
+var LOG = LogManager['getLogger(java.lang.String)'](__FILE__basename);
 
 // Security.addProvider(new BouncyCastleProvider());
 Security.insertProviderAt(new BouncyCastleProvider(), 1);
@@ -301,7 +297,9 @@ function parse_args(args) {
     if ((typeof args.options.key) !== 'string') {
         throw 'error: missing key'
     }
-    // LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    if (args.options.showargs) {
+        LOG.debug("args: {}", JSON.stringify(args, null, 4));
+    }
     var token = totp(
         args.options.algo ? algos[args.options.algo] : SHA1Digest,
         bytes_from_base32(args.options.key),
