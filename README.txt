@@ -1,51 +1,12 @@
-# -*- mode:org; coding:utf-8-unix -*-
 
-#+STARTUP: indent
+Build: mvn compile
 
+REPL: ./nashorn-playground.sh
 
-* Build
+Test: ./nashorn-playground.sh -strict nashorn-example.js -- arg1 arg2
 
+Distribute: mvn package
 
-#+begin_src sh
-  mvn compile
-#+end_src
+REPL jar: java -jar target/nashorn-playground.jar
 
-
-** REPL
-
-
-#+begin_src sh
-  ./nashorn-playground.sh
-#+end_src
-
-
-** Test
-
-
-#+begin_src sh
-  ./nashorn-playground.sh -strict nashorn-example.js -- arg1 arg2
-#+end_src
-
-
-* Distribute
-
-
-#+begin_src sh
-  mvn package
-#+end_src
-
-
-** REPL
-
-
-#+begin_src sh
-  java -jar target/nashorn-playground.jar
-#+end_src
-
-
-** Test
-
-
-#+begin_src sh
-  java -jar target/nashorn-playground.jar -strict nashorn-example.js -- arg1 arg2
-#+end_src
+Test jar: java -jar target/nashorn-playground.jar -strict nashorn-example.js -- arg1 arg2

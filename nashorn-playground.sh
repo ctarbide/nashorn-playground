@@ -6,6 +6,10 @@ if [ -d "${thispath%*.sh}" ]; then
 else
     dir=${thispath%/*}/target
 fi
-. "${dir}/config.inc.sh"
+if [ -r "${dir}/config.inc.sh" ]; then
+    . "${dir}/config.inc.sh"
+elif [ -r "${thispath%*.sh}.jar" ]; then
+    exec java -jar "${thispath%*.sh}.jar" "$@"
+fi
 PATH="${JAVA_HOME}/bin:${PATH}" CLASSPATH="${dir}/classes:`cat "${dir}/mdep.classpath"`" \
     exec java org.openjdk.nashorn.tools.Shell "$@"

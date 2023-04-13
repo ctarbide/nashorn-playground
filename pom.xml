@@ -12,12 +12,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <log4j-bom.version>2.14.1</log4j-bom.version>
-        <reactive-streams.version>1.0.3</reactive-streams.version>
-        <nashorn-core.version>15.2</nashorn-core.version>
+        <log4j-bom.version>2.20.0</log4j-bom.version>
+        <reactive-streams.version>1.0.4</reactive-streams.version>
+        <nashorn-core.version>15.4</nashorn-core.version>
 
         <!-- https://search.maven.org/artifact/org.bouncycastle/bcprov-jdk15to18 -->
-        <bouncycastle.version>1.68</bouncycastle.version>
+        <bouncycastle.version>1.72</bouncycastle.version>
 
         <!-- https://search.maven.org/artifact/commons-codec/commons-codec -->
         <commons-codec.version>1.15</commons-codec.version>

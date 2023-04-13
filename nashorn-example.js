@@ -1,15 +1,9 @@
-/*  -*- mode: js; coding:utf-8-unix -*-
-(progn
-  (require 'ansi-color)
-  (defun colorize-compilation-buffer ()
-    (ansi-color-apply-on-region compilation-filter-start (point)))
-  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
+/*
 
-(setq compile-command "mvn compile && ./nashorn-playground.sh -strict nashorn-example.js -- arg1 arg2")
+usage:
 
-(setq compile-command "./nashorn-playground.sh -strict nashorn-example.js -- --algo=sha1 file1 --step- 30 -d=6 -k- JBSWY3DPEHPK3PXP -b -xyz file2")
+    ./nashorn-playground.sh -strict nashorn-example.js -- arg1 arg2
 
-(local-set-key (kbd "C-c C-c") 'recompile)
 */
 
 var array_type = (function(global){

@@ -1,13 +1,9 @@
-/*  -*- mode: js; coding:utf-8-unix -*-
-(progn
-  (require 'ansi-color)
-  (defun colorize-compilation-buffer ()
-    (ansi-color-apply-on-region compilation-filter-start (point)))
-  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
+/*
 
-(setq compile-command "./totp.sh --algo=sha1 --step=30 -d=6 -k- JBSWY3DPEHPK3PXP -b -xyz")
+usage:
 
-(local-set-key (kbd "C-c C-c") 'recompile)
+    ../nashorn-playground.sh totp.js -- --algo=sha1 --step=30 -d=6 -k- JBSWY3DPEHPK3PXP -b -xyz
+
 */
 
 // reference: https://datatracker.ietf.org/doc/html/rfc6238
