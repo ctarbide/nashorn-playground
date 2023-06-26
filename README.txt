@@ -9,4 +9,6 @@ Distribute: mvn package
 
 REPL jar: java -jar target/nashorn-playground.jar
 
+REPL rlwrap + jar: rlwrap java -jar target/nashorn-playground.jar
+
 Test jar: java -jar target/nashorn-playground.jar -strict nashorn-example.js -- arg1 arg2
